@@ -1,5 +1,5 @@
 use crate::{Mirror, Protocol};
-use chrono::{Date, DateTime, Duration, Local};
+use chrono::{DateTime, Duration, Local};
 use regex::Regex;
 use std::collections::HashSet;
 
@@ -49,7 +49,37 @@ impl FilterOptions {
             }
         }
 
-        // TODO: Complete implementation
+        if let Some(ref re_match) = self.re_match {
+            if !re_match.is_match(mirror.url().as_str()) {
+                return false;
+            }
+        }
+
+        if let Some(ref re_inverse_match) = self.re_inverse_match {
+            if re_inverse_match.is_match(mirror.url().as_str()) {
+                return false;
+            }
+        }
+
+        if self.complete & (mirror.completion_pct() < 1.0) {
+            return false;
+        }
+
+        if self.active & !mirror.active() {
+            return false;
+        }
+
+        if self.ipv4 & !mirror.ipv4() {
+            return false;
+        }
+
+        if self.ipv6 & !mirror.ipv6() {
+            return false;
+        }
+
+        if self.isos & !mirror.isos() {
+            return false;
+        }
 
         true
     }
