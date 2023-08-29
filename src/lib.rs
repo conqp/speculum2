@@ -1,3 +1,4 @@
 mod mirrors;
+mod sorting;
 
-pub use mirrors::Mirrors;
+pub use mirrors::{Mirror, Mirrors};

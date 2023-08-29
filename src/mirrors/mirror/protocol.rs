@@ -1,13 +1,13 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[derive(Clone, Debug, Deserialize, Eq, Ord, PartialOrd, PartialEq, Serialize)]
 pub enum Protocol {
-    #[serde(rename = "ftp")]
-    Ftp,
-    #[serde(rename = "http")]
-    Http,
     #[serde(rename = "https")]
     Https,
     #[serde(rename = "rsync")]
     Rsync,
+    #[serde(rename = "http")]
+    Http,
+    #[serde(rename = "ftp")]
+    Ftp,
 }

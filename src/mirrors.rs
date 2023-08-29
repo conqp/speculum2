@@ -1,6 +1,6 @@
 mod mirror;
 
-use mirror::Mirror;
+pub use mirror::Mirror;
 use serde::{Deserialize, Serialize};
 
 const MIRRORS_URL: &str = "https://www.archlinux.org/mirrors/status/json/";
@@ -16,6 +16,10 @@ pub struct Mirrors {
 }
 
 impl Mirrors {
+    /// Retrieves mirrors from the web API
+    ///
+    /// # Errors
+    /// Returns an `[reqwest::Error]` if the mirrors could not be retrieved or parsed
     pub async fn retrieve() -> reqwest::Result<Self> {
         reqwest::get(MIRRORS_URL).await?.json().await
     }
