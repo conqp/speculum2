@@ -1,6 +1,6 @@
-mod mirror;
+pub mod mirror;
 
-pub use mirror::Mirror;
+use mirror::Mirror;
 use serde::{Deserialize, Serialize};
 
 const MIRRORS_URL: &str = "https://www.archlinux.org/mirrors/status/json/";

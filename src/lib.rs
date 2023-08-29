@@ -1,4 +1,8 @@
+mod filtering;
 mod mirrors;
 mod sorting;
 
-pub use mirrors::{Mirror, Mirrors};
+pub use mirrors::{
+    mirror::{Country, Mirror, Protocol},
+    Mirrors,
+};

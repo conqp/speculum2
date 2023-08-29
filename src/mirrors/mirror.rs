@@ -2,8 +2,8 @@ mod country;
 mod protocol;
 
 use chrono::{DateTime, FixedOffset};
-use country::Country;
-use protocol::Protocol;
+pub use country::Country;
+pub use protocol::Protocol;
 use reqwest::Url;
 use serde::{Deserialize, Serialize};
 use std::time::Duration;
