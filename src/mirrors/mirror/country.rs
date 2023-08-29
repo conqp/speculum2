@@ -10,6 +10,14 @@ impl<'mirror> Country<'mirror> {
     pub const fn new(name: &'mirror str, code: &'mirror str) -> Self {
         Self { name, code }
     }
+
+    pub const fn name(&self) -> &str {
+        self.name
+    }
+
+    pub const fn code(&self) -> &str {
+        self.code
+    }
 }
 
 impl<'mirror> Display for Country<'mirror> {
