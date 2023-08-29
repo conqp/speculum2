@@ -34,6 +34,10 @@ pub struct Mirror {
 }
 
 impl Mirror {
+    /// Returns the mirror URL
+    ///
+    /// # Panics
+    /// Panics if the URL is malformed
     #[must_use]
     pub fn url(&self) -> Url {
         Url::parse(&self.url).expect(&format!("Malformed URL on mirror: {}", self.url))
