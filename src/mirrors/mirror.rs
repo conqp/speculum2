@@ -40,7 +40,7 @@ impl Mirror {
     /// Panics if the URL is malformed
     #[must_use]
     pub fn url(&self) -> Url {
-        Url::parse(&self.url).expect(&format!("Malformed URL on mirror: {}", self.url))
+        Url::parse(&self.url).unwrap_or_else(|_| panic!("Malformed URL on mirror: {}", self.url))
     }
 
     #[must_use]
