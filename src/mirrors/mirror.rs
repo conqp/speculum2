@@ -7,6 +7,7 @@ use protocol::Protocol;
 use reqwest::Url;
 use serde::{Deserialize, Serialize};
 use std::time::Duration;
+use tokio::time::Instant;
 
 const CORE_FILES: &str = "core/os/x86_64/core.files";
 
@@ -103,5 +104,23 @@ impl Mirror {
     #[must_use]
     pub fn details(&self) -> &str {
         self.details.as_str()
+    }
+
+    /// Measure the download time of this mirror
+    ///
+    /// # Errors
+    /// Returns an `[reqwest::Error]` on download errors
+    ///
+    /// # Panics
+    /// Panics on malformed URLs
+    pub async fn measure(&self) -> reqwest::Result<Duration> {
+        let start = Instant::now();
+        reqwest::get(
+            self.url()
+                .join(CORE_FILES)
+                .expect("Malformed measurement URL"),
+        )
+        .await?;
+        Ok(Instant::now() - start)
     }
 }
