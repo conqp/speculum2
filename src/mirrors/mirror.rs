@@ -4,8 +4,11 @@ mod protocol;
 use chrono::{DateTime, FixedOffset};
 use country::Country;
 use protocol::Protocol;
+use reqwest::Url;
 use serde::{Deserialize, Serialize};
 use std::time::Duration;
+
+const CORE_FILES: &str = "core/os/x86_64/core.files";
 
 #[allow(clippy::struct_excessive_bools)]
 #[derive(Debug, Deserialize, Serialize)]
@@ -25,12 +28,14 @@ pub struct Mirror {
     ipv4: bool,
     ipv6: bool,
     details: String,
+    #[serde(skip_deserializing)]
+    measured_score: Option<f64>,
 }
 
 impl Mirror {
     #[must_use]
-    pub fn url(&self) -> &str {
-        self.url.as_str()
+    pub fn url(&self) -> Url {
+        Url::parse(&self.url).expect(&format!("Malformed URL on mirror: {}", self.url))
     }
 
     #[must_use]

@@ -35,7 +35,7 @@ pub enum Field {
 impl Field {
     pub fn compare(&self, lhs: &Mirror, rhs: &Mirror) -> Ordering {
         match self {
-            Self::Url => lhs.url().cmp(rhs.url()),
+            Self::Url => lhs.url().cmp(&rhs.url()),
             Self::Protocol => lhs.protocol().cmp(&rhs.protocol()),
             Self::LastSync => lhs
                 .last_sync()
