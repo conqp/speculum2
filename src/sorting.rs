@@ -2,7 +2,7 @@ use crate::Mirror;
 use sort_options::SortOptions;
 use std::cmp::Ordering;
 
-mod sort_options;
+pub mod sort_options;
 
 #[derive(Debug)]
 pub struct SortableMirror<'a> {

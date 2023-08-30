@@ -7,4 +7,7 @@ pub use mirrors::{
     mirror::{Mirror, Protocol},
     Mirrors,
 };
-pub use sorting::SortableMirror;
+pub use sorting::{
+    sort_options::{Field, SortOptions},
+    SortableMirror,
+};
