@@ -2,10 +2,8 @@ use crate::Mirror;
 use std::cmp::Ordering;
 use std::time::Duration;
 
-pub type SortOptions = Vec<Field>;
-
 #[derive(Debug)]
-pub enum Field {
+pub enum SortOption {
     Url,
     Protocol,
     LastSync,
@@ -17,7 +15,7 @@ pub enum Field {
     Country,
 }
 
-impl Field {
+impl SortOption {
     #[must_use]
     pub fn compare(&self, lhs: &Mirror, rhs: &Mirror) -> Ordering {
         match self {

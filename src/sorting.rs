@@ -1,41 +1,21 @@
 use crate::Mirror;
-use sort_options::SortOptions;
-use std::cmp::Ordering;
+use sort_option::SortOption;
+use sortable_mirror::SortableMirror;
 
-pub mod sort_options;
+pub mod sort_option;
+pub mod sortable_mirror;
 
 #[derive(Debug)]
-pub struct SortableMirror<'a> {
-    sort_options: &'a SortOptions,
-    mirror: &'a Mirror,
-}
+pub struct SortOptions(Vec<SortOption>);
 
-impl<'a> Eq for SortableMirror<'a> {}
-
-impl<'a> PartialEq<Self> for SortableMirror<'a> {
-    fn eq(&self, other: &Self) -> bool {
-        self.cmp(other) == Ordering::Equal
+impl SortOptions {
+    #[must_use]
+    pub fn new(options: Vec<SortOption>) -> Self {
+        Self(options)
     }
-}
 
-impl<'a> PartialOrd<Self> for SortableMirror<'a> {
-    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        Some(self.cmp(other))
-    }
-}
-
-impl<'a> Ord for SortableMirror<'a> {
-    fn cmp(&self, other: &Self) -> Ordering {
-        for sort_option in self.sort_options {
-            let result = sort_option.compare(self.mirror, other.mirror);
-
-            if result == Ordering::Equal {
-                continue;
-            }
-
-            return result;
-        }
-
-        Ordering::Equal
+    #[must_use]
+    pub const fn for_mirror<'a>(&'a self, mirror: &'a Mirror) -> SortableMirror {
+        SortableMirror::new(&self.0, mirror)
     }
 }
