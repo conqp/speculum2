@@ -23,6 +23,36 @@ pub struct FilterOptions {
 }
 
 impl FilterOptions {
+    #[allow(clippy::fn_params_excessive_bools, clippy::too_many_arguments)]
+    #[must_use]
+    pub fn new(
+        protocols: Option<HashSet<Protocol>>,
+        countries: Option<HashSet<String>>,
+        max_age: Option<Duration>,
+        re_match: Option<Regex>,
+        re_inverse_match: Option<Regex>,
+        complete: bool,
+        active: bool,
+        ipv4: bool,
+        ipv6: bool,
+        isos: bool,
+        max_download_time: Option<Duration>,
+    ) -> Self {
+        Self {
+            protocols,
+            countries,
+            max_age,
+            re_match,
+            re_inverse_match,
+            complete,
+            active,
+            ipv4,
+            ipv6,
+            isos,
+            max_download_time,
+            now: Local::now(),
+        }
+    }
     pub fn filter<'filter: 'mirrors, 'mirrors: 'item, 'item>(
         &'filter self,
         mirrors: &'mirrors [Mirror],
