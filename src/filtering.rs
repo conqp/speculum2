@@ -1,7 +1,8 @@
 use crate::{Mirror, Protocol};
-use chrono::{DateTime, Duration, Local};
+use chrono::{DateTime, Local};
 use regex::Regex;
 use std::collections::HashSet;
+use std::time::Duration;
 
 #[allow(clippy::struct_excessive_bools)]
 #[derive(Debug)]
@@ -16,6 +17,7 @@ pub struct FilterOptions {
     ipv4: bool,
     ipv6: bool,
     isos: bool,
+    max_download_time: Option<Duration>,
     // Local timestamp
     now: DateTime<Local>,
 }
@@ -79,6 +81,12 @@ impl FilterOptions {
 
         if self.isos & !mirror.isos() {
             return false;
+        }
+
+        if let Some(max_download_time) = self.max_download_time {
+            if mirror.download_time().unwrap_or(Duration::MAX) > max_download_time {
+                return false;
+            }
         }
 
         true
