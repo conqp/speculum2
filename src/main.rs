@@ -1,16 +1,16 @@
-use speculum2::Mirrors;
+use speculum2::{measure, Mirrors};
 
 #[tokio::main]
 async fn main() {
+    env_logger::init();
+
     match Mirrors::retrieve().await {
-        Ok(mut mirrors) => {
-            mirrors.measure().await;
+        Ok(mirrors) => {
+            let mut mirrors: Vec<_> = mirrors.urls().iter().cloned().collect();
+            measure(&mut mirrors).await;
 
             for mirror in mirrors {
                 println!("{mirror:?}");
-                println!("{}", mirror.url());
-                println!("{:?}", mirror.last_sync());
-                println!("{:?}", mirror.download_time());
             }
         }
         Err(error) => eprintln!("{error}"),

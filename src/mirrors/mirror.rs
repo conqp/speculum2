@@ -3,6 +3,7 @@ mod protocol;
 
 use chrono::{DateTime, FixedOffset};
 pub use country::Country;
+use log::warn;
 pub use protocol::Protocol;
 use reqwest::Url;
 use serde::{Deserialize, Serialize};
@@ -12,7 +13,7 @@ use tokio::time::Instant;
 const CORE_FILES: &str = "core/os/x86_64/core.files";
 
 #[allow(clippy::struct_excessive_bools)]
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct Mirror {
     url: String,
     protocol: Protocol,
@@ -29,7 +30,7 @@ pub struct Mirror {
     ipv4: bool,
     ipv6: bool,
     details: String,
-    #[serde(skip_deserializing)]
+    #[serde(default)]
     download_time: Option<Duration>,
 }
 
@@ -129,7 +130,8 @@ impl Mirror {
                 .join(CORE_FILES)
                 .expect("Malformed measurement URL"),
         )
-        .await?;
+        .await
+        .inspect_err(|error| warn!("{error}"))?;
         self.download_time = Some(Instant::now() - start);
         Ok(())
     }
