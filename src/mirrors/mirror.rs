@@ -29,6 +29,8 @@ pub struct Mirror {
     ipv4: bool,
     ipv6: bool,
     details: String,
+    #[serde(skip_deserializing)]
+    download_time: Option<Duration>,
 }
 
 impl Mirror {
@@ -108,14 +110,19 @@ impl Mirror {
         self.details.as_str()
     }
 
+    #[must_use]
+    pub const fn download_time(&self) -> Option<Duration> {
+        self.download_time
+    }
+
     /// Measure the download time of this mirror
     ///
     /// # Errors
     /// Returns an `[reqwest::Error]` on download errors
     ///
     /// # Panics
-    /// This function panics on malformed URLs.
-    pub async fn measure(&mut self) -> reqwest::Result<Duration> {
+    /// Panics on malformed URLs
+    pub async fn measure(&mut self) -> reqwest::Result<()> {
         let start = Instant::now();
         reqwest::get(
             self.url()
@@ -123,6 +130,7 @@ impl Mirror {
                 .expect("Malformed measurement URL"),
         )
         .await?;
-        Ok(Instant::now() - start)
+        self.download_time = Some(Instant::now() - start);
+        Ok(())
     }
 }

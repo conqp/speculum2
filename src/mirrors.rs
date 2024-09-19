@@ -1,5 +1,6 @@
 pub mod mirror;
 
+use log::warn;
 use mirror::Mirror;
 use serde::{Deserialize, Serialize};
 
@@ -22,6 +23,15 @@ impl Mirrors {
     /// Returns an `[reqwest::Error]` if the mirrors could not be retrieved or parsed
     pub async fn retrieve() -> reqwest::Result<Self> {
         reqwest::get(MIRRORS_URL).await?.json().await
+    }
+
+    pub async fn measure(&mut self) {
+        for mirror in self.urls.iter_mut() {
+            mirror
+                .measure()
+                .await
+                .unwrap_or_else(|error| warn!("{error}"));
+        }
     }
 }
 
