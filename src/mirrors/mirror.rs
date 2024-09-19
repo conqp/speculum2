@@ -3,7 +3,7 @@ mod protocol;
 
 use chrono::{DateTime, FixedOffset};
 pub use country::Country;
-use log::warn;
+use log::{info, warn};
 pub use protocol::Protocol;
 use reqwest::Url;
 use serde::{Deserialize, Serialize};
@@ -132,7 +132,9 @@ impl Mirror {
         )
         .await
         .inspect_err(|error| warn!("{error}"))?;
-        self.download_time = Some(Instant::now() - start);
+        let download_time = Instant::now() - start;
+        self.download_time.replace(download_time);
+        info!("Measured mirror {} @ {:?}", self.url, download_time);
         Ok(())
     }
 }
